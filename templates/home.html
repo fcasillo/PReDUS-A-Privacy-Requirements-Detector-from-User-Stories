@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/homestyle.css') }}" />
+</head>
+<body>
+    <h1>User Story's Privacy Detector</h1>
+    <br>
+    <h2>Please enter your User Story below:</h2>
+    <form action = "http://localhost:5000/prediction" method = "POST" autocomplete="off">
+        <br>
+        <input class="input_text" type="text" name = "user_story" >
+        <br>
+        <br>
+        <br>
+        <input class="submit "type = "submit" value = "Analyze" />
+    </form>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+        <meta HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/predictionstyle.css') }}" />
+    </head>
+    <script type="text/javascript">
+                function Load() {
+                    document.getElementById('theframe').src = "./static/entities.html?rand=" + (+ new Date());
+                    document.getElementById('theframe').onload = "";
+                }
+                function Load2() {
+                    document.getElementById('theframe2').src = "./static/dep_tree.html?rand=" + (+ new Date());
+                    document.getElementById('theframe2').onload = "";
+                }
+                function show1() {
+                    if (document.getElementById('theframe').style.display == "none"){
+                        document.getElementById('showinput1').style.display = "block";
+                        document.getElementById('theframe').style.display = "block";
+                    }else{
+                        document.getElementById('theframe').style.display = "none";
+                        document.getElementById('showinput1').style.display = "none";
+                    }
+                }
+                function show2() {
+                    if (document.getElementById('theframe2').style.display == "none"){
+                        document.getElementById('showinput2').style.display = "block";
+                        document.getElementById('theframe2').style.display = "block";
+                    }else{
+                        document.getElementById('theframe2').style.display = "none";
+                        document.getElementById('showinput2').style.display = "none";
+                    }
+                }
+
+    </script>
+    <body>
+        <h2>The prediction is:</h2>
+        {%if(result[0]>=0.5)%}
+            <h1 style='color:green;'>Privacy Content</h1>
+            <h2>Privacy words detected:</h2>
+            <br>
+            <div id="explain4" style='display:block;'>{% autoescape off %}{% for line in explain4['token'] %}{{ line|safe }} {% endfor %}{% endautoescape %}</div>
+        {%else%}<h1 style='color:#8b8b8b;'>Not Privacy Content</h1>{%endif%}
+        <form>
+            <br>
+                <input type="checkbox" name ="input" id="input1" onchange="show1()"><label for="entities">Show the entities into User Story</label>
+                <input type="checkbox" name ="input" id="input2" onchange="show2()"><label for="entities">Show the parts-of-speech and dependency parse tree </label>
+            </form>
+        <h2 id="showinput1" style='display:none;'>Entities contained into User Story:</h2>
+        <iframe id="theframe" scrolling="no" onload="Load()" title="Entities" width="99%" height="200px" loading="lazy" style='display:none;'>
+        </iframe>
+        <h2 id="showinput2" style='display:none;'>Parts-of-speech and dependency parse tree:</h2>
+        <iframe id="theframe2" onload="Load2()" title="Dependecies" width="99%" height="600px" loading="lazy" style='display:none;'></iframe>
+        <br>
+        <form action = "http://localhost:5000/" method = "POST">
+            <br>
+            <input class="submit" type = "submit" value = "Return to Homepage!" />
+        </form>
+    
+    </body>
+</html>

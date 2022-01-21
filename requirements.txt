@@ -1,0 +1,13 @@
+pandas
+flask
+nltk
+tensorflow
+spacy==2.3.7
+IPython
+numpy
+pickleshare
+matplotlib
+seaborn
+keras
+html5lib
+wordcloud

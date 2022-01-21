@@ -1,0 +1,41 @@
+@font-face {
+  font-family: futura;
+  src: url(Futura.ttc);
+}
+body {
+    font-family: futura;
+    text-align: center;
+    color: #D24141;
+    padding: 10em 0;
+}
+.submit {
+    background-color: #F8F8F8;
+    color:#8b8b8b;
+    font-size: 1em;
+    padding: 14px 40px;
+    border: 0em;
+    border-radius: 0.5em;
+    box-shadow: 0 0.1em #999;
+    outline: none;
+    font-weight:bold;
+
+}
+.submit:active {
+    color:#8b8b8b;
+    background-color: #F8F8F8;
+    box-shadow: 0 0.2em #666;
+    transform: translateY(0.2em);
+    border: 0em;
+    font-weight:bold;
+}
+.input_text{
+    font-family: futura;
+    font-size: 1.5em;
+    text-align: center;
+    width: 60%;
+    padding: 12px 20px;
+    border-radius: 0.5em;
+    outline: none;
+    border: 2px outset #F8F8F8;
+    color:#6a5acd;
+}
