@@ -53,13 +53,13 @@ def extract_features(user_story):
         if str(t) not in punctuation:
             modified_tokens_pos.append(t.pos_)
     
-    c,keywords = dictionary.parse(user_story.lower().split(' '))
+    c,keywords, words_category = dictionary.parse(user_story.lower().split(' '))
     categories_list = [list(i) for i in c.items()]
     if str(keywords) == "[]":
         keywords = "none"
         categories_list = "none"
 
-    return modified_tokens, modified_tokens_dep, modified_tokens_pos, categories_list, keywords, text_tokenized
+    return modified_tokens, modified_tokens_dep, modified_tokens_pos, categories_list, keywords, text_tokenized, words_category
 
 
 def prepare_input_privacy(sentence):
@@ -71,7 +71,7 @@ def prepare_input_privacy(sentence):
     disclo_cnn_cutted.trainable = False
     for layer in disclo_cnn_cutted.layers:
         layer.trainable = False
-    modified_tokens, modified_tokens_dep, modified_tokens_pos, counter_list, k, k_grams = extract_features(sentence)
+    modified_tokens, modified_tokens_dep, modified_tokens_pos, counter_list, k, k_grams, words_category = extract_features(sentence)
     
 
     encoded1 = tokenizer.texts_to_sequences(modified_tokens[:])
@@ -116,25 +116,25 @@ def prepare_input_privacy(sentence):
     })
     
     
-    return encoded4_x, encoded5_x, output_disclo, df_coeff, k
+    return encoded4_x, encoded5_x, output_disclo, df_coeff, k, words_category
 
 def weights_to_HTML(df_coeff, keywords):
     #Highlight for privacy words
-    highlighted_text4 = pd.DataFrame(columns=["token"])
+    highlighted_text = pd.DataFrame(columns=["token"])
     count=0
     for word in df_coeff['word']:
         if count<(len(df_coeff['word'])):
     
             if ((word in keywords) & (word not in string.punctuation)):
-                highlighted_text4.loc[count] = '<span style="background-color:rgba(207, 0, 15,0.8);color:#000000;">' + html.escape(word) + '</span>'
+                highlighted_text.loc[count] = '<span style="background-color:rgba(207, 0, 15,0.8);color:#000000;">' + html.escape(word) + '</span>'
             else:
-                highlighted_text4.loc[count] = '<span style="color:#000000;">' + word + '</span>'
+                highlighted_text.loc[count] = '<span style="color:#000000;">' + word + '</span>'
     
         count+=1
     
-    return highlighted_text4
+    return highlighted_text
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 # Configure a secret SECRET_KEY
 app.config['SECRET_KEY'] = 'mysecretkey'
 
@@ -152,7 +152,6 @@ user_story = ''
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    
     return render_template('home.html')
 
 
@@ -162,24 +161,14 @@ def prediction():
     global user_story
     
     user_story = str(request.form['user_story'])
-    input1,input2,input3, df_coeff, keywords= prepare_input_privacy(user_story)
+    input1,input2,input3, df_coeff, keywords, words_category= prepare_input_privacy(user_story)
 
     prediction = privacy_detector.predict([input1,input2,input3])
     
-    doc = nlp(user_story)
-    
-    x1 = displacy.render(doc, style='ent', page=True)
-    output_path = Path("./static/entities.html")
-    output_path.open("w", encoding="utf-8").write(x1)
-    
-    x2 = displacy.render(doc, style='dep', page=True)
-    output_path = Path("./static/dep_tree.html")
-    output_path.open("w", encoding="utf-8").write(x2)
-    
-    explain4 = weights_to_HTML(df_coeff, keywords)
+    explain = weights_to_HTML(df_coeff, keywords)
     
 
-    return render_template('prediction.html',result = prediction,graph1 = x1,graph2 = x2, explain4 = explain4)
+    return render_template('prediction.html',result = prediction, explain = explain, words_category = words_category)
 
 
 

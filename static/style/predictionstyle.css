@@ -29,14 +29,13 @@ body {
     font-weight:bold;
 }
 th{
-    font-size: 2em;
-    text-align: left;
-    
+    font-size: 1.5em;
+    text-align: center;
 }
 td{
-    font-size: 1.3em;
+    font-size: 1em;
     padding: 0.5em 0em;
-    text-align: left;
+    text-align: center;
     
 }
 .left_column{

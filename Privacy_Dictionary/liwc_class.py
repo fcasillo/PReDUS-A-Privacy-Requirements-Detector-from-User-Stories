@@ -1,7 +1,6 @@
 import collections
 from string import punctuation
 
-
 class Liwc():
     """
     Class for the Linguistic Inquiry and Word Count (LIWC) dictionairy.
@@ -14,6 +13,24 @@ class Liwc():
         """
         self.categories, self.lexicon = self._load_dict_file(filepath)
         self._trie = self._build_char_trie(self.lexicon)
+
+    def getCategoryDescription(self,category):
+        if category=="NegativePrivacy":
+            return "Antecedents and consequences of negative privacy experiences"
+        elif category=="Restriction":
+            return "Restrictive and regulatory behaviors for maintaining privacy"
+        elif category== "NormsRequisites":
+            return "Norms, beliefs and expectations in relation to achieving privacy"
+        elif category=="OutcomeState":
+            return "Behavioral states and the outcomes that are served through privacy"
+        elif category=="OpenVisible":
+            return "Open and public access to people"
+        elif category=="PrivateSecret":
+            return "The 'content' of privacy, i.e., what is considered private"
+        elif category=="Intimacy":
+            return "Small group privacy marked by group inclusion and intimacy"
+        elif category=="SafetyProtect":
+            return "Feeling safe and protecting or guarding oneself"
 
     def search(self, word):
         """
@@ -34,19 +51,21 @@ class Liwc():
         """
         cat_counter = collections.Counter()
         keywords = []
+        words_category = []
 
         for token in tokens:
             # Find in which categories this token falls, if any
             cats = self.search(token)
             for cat in cats:
                 if cat != 'PrivacyTotal':
+                    words_category.append([token,cat,self.getCategoryDescription(cat)])
                     cat_counter[cat] += 1
             if cats != []:
                 for character in token:  
                     if character in punctuation:  
                         token = token.replace(character, "")
                 keywords.append(token)
-        return cat_counter, keywords
+        return cat_counter, keywords, words_category
 
     def _load_dict_file(self, filepath):
         liwc_file = open(filepath)
