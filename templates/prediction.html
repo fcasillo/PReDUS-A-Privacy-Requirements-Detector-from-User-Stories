@@ -11,6 +11,8 @@
     <h2>The prediction is:</h2>
     {%if(result[0]>=0.5)%}
     <h1 style='color:green;'>Privacy Content</h1>
+    {%else%}<h1 style='color:#8b8b8b;'>Not Privacy Content</h1>{%endif%}
+    {%if(words_category|length > 0)%}
     <h2>Privacy words detected:</h2>
     <br>
     <div id="explain4" style='display:block;'>{% autoescape off %}{% for line in explain['token'] %}{{ line|safe }} {%
@@ -32,7 +34,7 @@
             {% endfor %}{% endautoescape %}
         </table>
     </div>
-    {%else%}<h1 style='color:#8b8b8b;'>Not Privacy Content</h1>{%endif%}
+    {%endif%}
 
     <form action="http://localhost:5000/" method="POST">
         <br>
